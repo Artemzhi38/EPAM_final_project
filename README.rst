@@ -8,7 +8,8 @@ VK statistics
 | 1 In command line with activated python interpreter(Python 3.8 recommended) run:
 |   pip install -r requirements.txt
 |
-| 2 To run server cd to django_vk_stat/django_vk_stat/ and run:
+| 2 To apply basic migrations run server cd to django_vk_stat/django_vk_stat/ and run:
+|   python manage.py migrate
 |   python manage.py runserver
 |
 | 3 In your browser go to the 127.0.0.1:8000

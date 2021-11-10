@@ -2,7 +2,6 @@ import asyncio
 import calendar
 import csv
 import os
-import time as time_lib
 from collections import defaultdict
 from datetime import datetime, time
 
@@ -214,18 +213,15 @@ def main_for_async_execute(user_id, ts, vk_app_token):
         -graphs creation(sorts data in every stat, renames some params and
                          runs 'stat_to_graph' func for every stat)"""
     # Preparations part
-    t0 = time_lib.time()
     stats, path_to_static_dir = prepare_data(user_id, ts)
     ts_for_vk = max(ts, first_post_ts(user_id, vk_app_token))
     all_posts = []
-    t1 = time_lib.time()
 
     # VK api part
     if os.name == 'nt':
         asyncio.set_event_loop_policy(
             asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(get_all_posts(user_id, all_posts, vk_app_token, ts_for_vk))
-    t2 = time_lib.time()
 
     # Counting part
     for post in filter(
@@ -234,7 +230,6 @@ def main_for_async_execute(user_id, ts, vk_app_token):
             post, os.path.join(
                 path_to_static_dir,  f"id_{user_id}_start_{ts}.csv"))
         add_post_to_stats(post, stats)
-    t3 = time_lib.time()
 
     # Graphs part
     sorted_renamed_stats = [
@@ -245,11 +240,6 @@ def main_for_async_execute(user_id, ts, vk_app_token):
     names = ['hours', 'days', 'months', 'years']
     for stat, name in zip(sorted_renamed_stats, names):
         stat_to_graph(stat, name, user_id, ts, path_to_static_dir)
-    t4 = time_lib.time()
-    print(f'Preparations took {t1-t0}')
-    print(f'VK api part took {t2-t1}')
-    print(f'Counting took {t3-t2}')
-    print(f'Graphs took {t4-t3}')
 
 
 def start(request):
@@ -262,10 +252,7 @@ def start(request):
             data_id = form.cleaned_data['user_page_id']
             ts = datetime.combine(form.cleaned_data['start_date'],
                                   time()).timestamp()
-            t1 = time_lib.time()
             main_for_async_execute(data_id, ts, vk_app_token)
-            t2 = time_lib.time()
-            print(f'All program took {t2-t1}')
             filename = f"id_{data_id}_start_{ts}"
             return render(request, 'result.html',
                           context={'stat_csv':  filename+'.csv',
