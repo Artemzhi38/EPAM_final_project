@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>VkontaktePostStats Results</h1>
+
+<p>There are the results!</p>
+
+<h2>Graphs</h2>
+
+<p>There are four graphs with amount of posts and average amount of likes/comments/reposts statistics</p>
+{% load static %}
+<img src="{% static h_png %}"/>
+<img src="{% static d_png %}"/>
+<img src="{% static m_png %}"/>
+<img src="{% static y_png %}"/>
+<h2>CSV file</h2>
+<a href="{% static stat_csv %}" download="">
+    <button>Download CSV</button>
+</a>
+
+{% endblock %}
